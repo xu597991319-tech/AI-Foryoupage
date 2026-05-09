@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "preferred_platforms": [
+    "feishu"
+  ],
+  "fallback_platforms": [
+    "html"
+  ],
+  "setup_status": "pending_agent_resolution",
+  "resolved_channels": [],
+  "updated_at": "2026-05-10T00:00:00+08:00"
+}

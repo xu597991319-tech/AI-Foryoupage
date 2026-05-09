@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "enabled": true,
+  "mode": "single_time",
+  "time": "09:00",
+  "timezone": "Asia/Shanghai",
+  "timezone_source": "auto_detect_local",
+  "updated_at": "2026-05-10T00:00:00+08:00"
+}

@@ -1,0 +1,11 @@
+assets/history_seen_urls.json
+assets/sources_trust.json
+assets/user_profile.json
+assets/push_schedule.json
+assets/delivery.json
+.aime/
+__pycache__/
+scripts/__pycache__/
+*.pyc
+raw_news.json
+output/

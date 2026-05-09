@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "onboarding_completed": true,
+  "selected_packs": [
+    "ai-agent",
+    "design-experience",
+    "open-source"
+  ],
+  "include_keywords": [
+    "Figma",
+    "MCP"
+  ],
+  "exclude_keywords": [
+    "crypto"
+  ],
+  "language": "zh-CN",
+  "max_items": 8,
+  "updated_at": "2026-05-10T00:00:00+08:00"
+}

@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "default_pack_ids": ["ai-agent", "open-source", "industry-trends"],
+  "packs": [
+    {
+      "id": "ai-agent",
+      "label": "AI 与 Agent",
+      "description": "模型、Agent、MCP、自动化工作流、AI 产品落地。",
+      "include_keywords": ["AI", "Agent", "MCP", "RAG", "LLM", "workflow", "automation", "OpenAI", "Claude", "Gemini", "DeepSeek"],
+      "exclude_keywords": []
+    },
+    {
+      "id": "product-business",
+      "label": "产品与商业",
+      "description": "AI 产品案例、商业化、增长、创业、行业变化。",
+      "include_keywords": ["product", "pricing", "growth", "go-to-market", "startup", "SaaS", "business model", "case study"],
+      "exclude_keywords": []
+    },
+    {
+      "id": "design-experience",
+      "label": "设计与体验",
+      "description": "设计工具、Figma、设计系统、交互体验、设计到代码。",
+      "include_keywords": ["design", "Figma", "design system", "UX", "UI", "prototype", "accessibility", "design to code"],
+      "exclude_keywords": []
+    },
+    {
+      "id": "frontend-devtools",
+      "label": "前端与开发工具",
+      "description": "前端框架、组件库、工程效率、开发者工具。",
+      "include_keywords": ["frontend", "React", "Vue", "Next.js", "component library", "developer tools", "DevEx", "performance"],
+      "exclude_keywords": []
+    },
+    {
+      "id": "open-source",
+      "label": "高价值开源项目",
+      "description": "GitHub 热门项目、重要 release、可复用工具链。",
+      "include_keywords": ["GitHub", "open source", "release", "repository", "SDK", "framework", "library", "toolkit"],
+      "exclude_keywords": []
+    },
+    {
+      "id": "finance-quant",
+      "label": "金融与量化",
+      "description": "量化交易、市场信号、美股、金融科技。",
+      "include_keywords": ["quant", "trading", "US stocks", "market signal", "portfolio", "factor", "backtest", "fintech", "ETF", "options"],
+      "exclude_keywords": []
+    },
+    {
+      "id": "research",
+      "label": "学术与研究",
+      "description": "论文、技术突破、实验结果、长期趋势。",
+      "include_keywords": ["paper", "research", "benchmark", "arXiv", "experiment", "evaluation", "breakthrough"],
+      "exclude_keywords": []
+    },
+    {
+      "id": "industry-trends",
+      "label": "行业趋势",
+      "description": "大公司动态、平台变化、生态迁移、监管与市场变化。",
+      "include_keywords": ["industry", "platform", "ecosystem", "regulation", "market", "strategy", "Big Tech"],
+      "exclude_keywords": []
+    }
+  ]
+}
