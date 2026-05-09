@@ -1,12 +1,12 @@
 ---
-name: deeplearning
-description: Onboard a user into a personal high-signal information radar, learn what content they want to follow, remember push timing, and send curated updates as Feishu/Lark interactive cards. Use when the user mentions DeepLearning, personal news radar, daily briefing, Feishu card push, AI news, content preferences, onboarding, or changing what the radar should follow.
+name: ai-headlines
+description: Onboard a user into a personal high-signal information radar, learn what content they want to follow, remember push timing, and send curated updates as rich briefing cards. Use when the user mentions AI Headlines, personal headlines, personal news radar, daily briefing, Feishu card push, AI news, content preferences, onboarding, or changing what the radar should follow.
 author: 徐尚
 ---
 
-# DeepLearning
+# AI Headlines
 
-DeepLearning 是一个个人高信号信息雷达 Skill。它让用户用自然语言告诉 Agent 想看什么、在哪收、什么时候收；Agent 负责记住偏好、发现高质量信息、筛选内容，并用合适的平台形态推送。
+AI Headlines 是一个个人高信号信息雷达 Skill。它让用户用自然语言告诉 Agent 想看什么、在哪收、什么时候收；Agent 负责记住偏好、发现高质量信息、筛选内容，并用合适的平台形态推送。
 
 ## Core Behavior
 
@@ -99,7 +99,7 @@ Do not overwrite a real user profile unless the user asks to update preferences.
 
 ## Source Strategy
 
-Users choose what they want to read; DeepLearning decides where to find it.
+Users choose what they want to read; AI Headlines decides where to find it.
 
 Do not expose source engineering terms to the user during onboarding. Internally, each content pack maintains its own source mix:
 
@@ -116,7 +116,7 @@ Important rules:
 - Platform-level weights may be light risk hints only; they must not decide elimination.
 - Anchor sources are protected: they may be reduced in frequency, but should not be automatically blocked.
 - Separate content quality from user relevance. A strong source can publish content that is irrelevant to one user without becoming a bad source.
-- DeepLearning is text-first but not text-only. It may use podcasts, videos, transcripts, show notes, public summaries, and public discussions when they can be converted into reliable text.
+- AI Headlines is text-first but not text-only. It may use podcasts, videos, transcripts, show notes, public summaries, and public discussions when they can be converted into reliable text.
 - Do not bypass login or paywalls. If original content is inaccessible, use only public high-quality echoes such as detailed analysis, transcripts, interviews, or discussions, and keep attribution clear.
 - Paid access is not a quality signal. Paid or paywall-adjacent content must pass the same quality bar as free content.
 - The source library should renew itself. New sources enter as `candidate` or `discovery` and earn trust through actual content performance.
@@ -134,7 +134,7 @@ Candidate content should satisfy at least one of these:
 - It changes a workflow, ability boundary, product pattern, toolchain, market signal, or decision context.
 - It comes from a high-signal source and represents an original signal.
 
-Do not select low-quality filler just to fill a card. DeepLearning should normally try to deliver 10 items by expanding from the user's main interests to adjacent interests and then to high-signal general content.
+Do not select low-quality filler just to fill a card. AI Headlines should normally try to deliver 10 items by expanding from the user's main interests to adjacent interests and then to high-signal general content.
 
 Always verify the claim actor before generating the final brief. Do not turn an individual's opinion, employee blog, third-party analysis, or community interpretation into a company's official decision.
 
@@ -211,7 +211,7 @@ When this happens, update only the relevant part of the profile, schedule, deliv
 
 ## Execution
 
-DeepLearning is currently Skill-led, with local scripts as the execution layer. MCP may come later when the workflow is stable.
+AI Headlines is currently Skill-led, with local scripts as the execution layer. MCP may come later when the workflow is stable.
 
 Execution principles:
 

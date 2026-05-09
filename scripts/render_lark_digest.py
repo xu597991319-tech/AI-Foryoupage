@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""将 Todayradar 的扁平精选结果渲染成飞书交互式卡片草稿 JSON。"""
+"""将 AI Headlines 的扁平精选结果渲染成飞书交互式卡片草稿 JSON。"""
 
 from __future__ import annotations
 
@@ -148,7 +148,7 @@ def build_card_draft(payload: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "msg_type": "interactive",
         "report_date": report_date,
-        "header_title": f"Todayradar 每日精选 | {report_date}" if report_date else "Todayradar 每日精选",
+        "header_title": f"AI Headlines 每日精选 | {report_date}" if report_date else "AI Headlines 每日精选",
         "header_template": "blue",
         "meta": payload.get("meta", {}),
         "items": card_items,
@@ -156,7 +156,7 @@ def build_card_draft(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="把 Todayradar 的结构化 JSON 渲染成飞书交互式卡片草稿")
+    parser = argparse.ArgumentParser(description="把 AI Headlines 的结构化 JSON 渲染成飞书交互式卡片草稿")
     parser.add_argument("--input", required=True, help="输入 JSON 文件路径")
     parser.add_argument("--output", required=True, help="输出交互式卡片草稿 JSON 文件路径")
     return parser.parse_args()

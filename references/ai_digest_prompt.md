@@ -1,4 +1,4 @@
-# Todayradar AI 处理提示模板
+# AI Headlines AI 处理提示模板
 
 对 `raw_news.json` 的 `items` 列表逐条评估，只保留 **`ai_raw_score >= 70`** 的候选，并输出结构化 JSON 草稿供 `scripts/finalize_digest.py` 与卡片渲染脚本使用。
 
@@ -56,7 +56,7 @@
 
 - `score_new`（35%）：时效爆发力。是否“新/重要/即将带来短期变化”。
 - `score_deep`（30%）：逻辑深度与事实密度。是否有机制、数据、方法、可复用结论，而非泛泛转述。
-- `score_target`（20%）：赛道核心度。对 Todayradar 的核心扫描范围（AI、Quant、US Stocks）命中程度。
+- `score_target`（20%）：赛道核心度。对 AI Headlines 的核心扫描范围（AI、Quant、US Stocks）命中程度。
 - `score_action`（15%）：实操启发性。是否能直接用于决策、研究、产品/工作流调整。
 
 ### 计算公式（必须严格按此计算并输出）

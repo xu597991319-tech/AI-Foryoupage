@@ -1,4 +1,4 @@
-# DeepLearning Presentation
+# AI Headlines Presentation
 
 Presentation turns ranked content into something users can read quickly, understand clearly, and open for deeper reading when they choose.
 

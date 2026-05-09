@@ -289,7 +289,7 @@ GITHUB_T2 = {
     "reason": "GitHub 条目默认按 T2 处理，即使仓库属于 Quant 或 US Stocks 方向，也不要仅因 category 命中就自动获得高分。",
 }
 
-USER_AGENT = "Todayradar-fetcher/4.0"
+USER_AGENT = "AI-Headlines-fetcher/4.0"
 REQUEST_TIMEOUT = 20
 DEFAULT_PER_SOURCE = 8
 DEFAULT_HISTORY_FILE = "assets/history_seen_urls.json"

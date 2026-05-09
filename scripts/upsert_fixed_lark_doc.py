@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""兼容入口：转发到 Todayradar 飞书消息发送脚本。"""
+"""兼容入口：转发到 AI Headlines 飞书消息发送脚本。"""
 
 from __future__ import annotations
 

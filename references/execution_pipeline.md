@@ -1,6 +1,6 @@
-# DeepLearning Execution Pipeline
+# AI Headlines Execution Pipeline
 
-This file preserves the current Todayradar execution details. `SKILL.md` should stay focused on product behavior and high-level rules.
+This file preserves the current AI Headlines execution details. `SKILL.md` should stay focused on product behavior and high-level rules.
 
 ## 输入与产物
 
@@ -9,7 +9,7 @@ This file preserves the current Todayradar execution details. `SKILL.md` should 
 - AI 处理草稿：结构化精选 JSON，例如 `output/selected_news_draft.json`。
 - 封顶后结果：`output/selected_news.json`。
 - 补图后结果：`output/selected_news_with_assets.json`。
-- 飞书卡片草稿：交互式卡片 JSON，例如 `output/todayradar_digest.card.json`。
+- 飞书卡片草稿：交互式卡片 JSON，例如 `output/ai_headlines_digest.card.json`。
 - 消息发送配置：`assets/lark_message_config.json`。
 - 跨频次历史去重文件：`assets/history_seen_urls.json`（运行时自动初始化，默认已被 `.gitignore` 忽略）。
 - 主要字段：`title`、`original_title`、`link`、`summary`、`content`、`published_at`、`source`、`source_type`、`category`、`tag`、`digest`、`cover_image_url`、`image_prompt`、`image_path`、`extra.priority_tier`、`extra.priority_topics`、`extra.priority_score_floor`、`extra.score_adjustment_hint`、`extra.suggested_score_ceiling`。
@@ -77,7 +77,7 @@ This file preserves the current Todayradar execution details. `SKILL.md` should 
 6. 将补图后的结果渲染成飞书交互式卡片草稿。
 
    ```bash
-   python3 scripts/render_lark_digest.py --input output/selected_news_with_assets.json --output output/todayradar_digest.card.json
+   python3 scripts/render_lark_digest.py --input output/selected_news_with_assets.json --output output/ai_headlines_digest.card.json
    ```
 
    渲染结果必须遵守：
@@ -94,7 +94,7 @@ This file preserves the current Todayradar execution details. `SKILL.md` should 
 7. 直接把草稿推送到飞书聊天或指定话题。
 
    ```bash
-   python3 scripts/send_lark_message.py --draft-file output/todayradar_digest.card.json
+   python3 scripts/send_lark_message.py --draft-file output/ai_headlines_digest.card.json
    ```
 
    发送阶段必须遵守：
@@ -102,7 +102,7 @@ This file preserves the current Todayradar execution details. `SKILL.md` should 
    - 默认读取 `assets/lark_message_config.json`；未显式指定接收者时，默认发送到当前用户的飞书聊天。
    - 如需回复到已有话题，传入 `--reply-message-id <message_id>`，脚本会通过飞书话题回复发送。
    - 脚本会先上传每张配图，再创建卡片实体，最后以 **Interactive Card** 发送。
-   - 卡片头部使用 `Todayradar 每日精选 | {日期}`，默认蓝色 Header。
+   - 卡片头部使用 `AI Headlines 每日精选 | {日期}`，默认蓝色 Header。
    - 相邻资讯之间必须插入 `hr` 分隔，避免正文与图片挤在一起。
    - **注意：** 这个脚本内部会调用 `inner_skills/feishu-im-send` 的发送脚本，必须通过 `bash` 直接执行，并设置 `include_secrets=true`。
 
@@ -200,7 +200,7 @@ This file preserves the current Todayradar execution details. `SKILL.md` should 
 
 最终飞书卡片只保留以下层级：
 
-1. 卡片标题：`Todayradar 每日精选 | 日期`
+1. 卡片标题：`AI Headlines 每日精选 | 日期`
 2. `1. 【类别标签】两句正文`
 3. `查看原文`
 4. 配图

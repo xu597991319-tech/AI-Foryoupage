@@ -1,4 +1,4 @@
-# DeepLearning Content Selection
+# AI Headlines Content Selection
 
 Content selection is an internal backend rule. It is not card copy, user-facing terminology, or scoring.
 
@@ -16,7 +16,7 @@ Keep these two steps separate.
 
 ## Core Principle
 
-DeepLearning does not chase every new item. It selects content that either shows an important change or gives useful understanding.
+AI Headlines does not chase every new item. It selects content that either shows an important change or gives useful understanding.
 
 Freshness and depth are internal selection signals. Do not expose them to users as labels.
 
@@ -209,7 +209,7 @@ The first four may enter the candidate pool if they pass selection rules.
 
 ## Ten-Item Delivery Target
 
-DeepLearning should normally try to deliver 10 items.
+AI Headlines should normally try to deliver 10 items.
 
 Do not fill the card with low-quality content. Instead, use an ordered fallback strategy:
 

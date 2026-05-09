@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""对 Todayradar 的精选结果进行排序、封顶并输出扁平 Top 10。"""
+"""对 AI Headlines 的精选结果进行排序、封顶并输出扁平 Top 10。"""
 
 from __future__ import annotations
 
@@ -515,7 +515,7 @@ def finalize_payload(payload: Dict, trust_payload: Dict, max_items: int = MAX_SE
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="对 Todayradar 精选结果执行排序封顶并输出扁平 JSON")
+    parser = argparse.ArgumentParser(description="对 AI Headlines 精选结果执行排序封顶并输出扁平 JSON")
     parser.add_argument("--input", required=True, help="输入 JSON 文件路径")
     parser.add_argument("--output", required=True, help="输出 JSON 文件路径")
     parser.add_argument("--max-items", type=int, default=MAX_SELECTED_ITEMS, help="最终最多保留多少条，默认 10")

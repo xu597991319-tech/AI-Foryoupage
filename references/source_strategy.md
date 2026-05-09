@@ -1,6 +1,6 @@
-# DeepLearning Source Strategy
+# AI Headlines Source Strategy
 
-DeepLearning should reduce the cost of finding high-quality information in an era where low-quality content is cheap to produce.
+AI Headlines should reduce the cost of finding high-quality information in an era where low-quality content is cheap to produce.
 
 The product principle is:
 
@@ -10,7 +10,7 @@ Do not expose source taxonomy to users. Users should only see content directions
 
 ## Content Formats
 
-DeepLearning is text-first, but not text-only.
+AI Headlines is text-first, but not text-only.
 
 It may use different formats as long as they can be turned into reliable text before content selection and scoring:
 
@@ -244,7 +244,7 @@ Use a recent window, such as recent 30 days or recent 50 items, so sources can r
 
 The high-signal source library must be a living system. If it only demotes weak sources and never discovers new ones, it will become narrower over time.
 
-Do not transfer source-selection work to the user. Users should not be asked to approve every new source. They only choose what they want to read; DeepLearning should handle source discovery and quality judgment in the background.
+Do not transfer source-selection work to the user. Users should not be asked to approve every new source. They only choose what they want to read; AI Headlines should handle source discovery and quality judgment in the background.
 
 ### Renewal Principle
 
@@ -315,13 +315,13 @@ The user-facing control remains simple:
 - "少发这个来源"
 - "不要再看这个方向"
 
-DeepLearning translates those requests into source and preference updates internally.
+AI Headlines translates those requests into source and preference updates internally.
 
 ## Public Echo Discovery
 
 Some high-value ideas originate in paid, private, or hard-to-access sources, but later appear in public discussions, videos, podcasts, notes, or analyses.
 
-DeepLearning may discover these public echoes, but must not claim to have read the original inaccessible content.
+AI Headlines may discover these public echoes, but must not claim to have read the original inaccessible content.
 
 Use public echoes when:
 
@@ -364,7 +364,7 @@ Recommended metadata:
 
 ## Access Boundary
 
-DeepLearning should not bypass login, paywalls, access control, or platform restrictions.
+AI Headlines should not bypass login, paywalls, access control, or platform restrictions.
 
 It can use:
 

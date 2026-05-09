@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""为 Todayradar 的扁平精选结果补齐本地图片资产。"""
+"""为 AI Headlines 的扁平精选结果补齐本地图片资产。"""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 import requests
 
 REQUEST_TIMEOUT = 30
-USER_AGENT = "Todayradar-image-resolver/1.0"
+USER_AGENT = "AI-Headlines-image-resolver/1.0"
 CONTENT_TYPE_EXTENSION = {
     "image/jpeg": ".jpg",
     "image/png": ".png",
@@ -306,7 +306,7 @@ def resolve_images(payload: Dict, output_path: Path, assets_dir: Path) -> Dict:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="为 Todayradar 精选结果补齐图片资产")
+    parser = argparse.ArgumentParser(description="为 AI Headlines 精选结果补齐图片资产")
     parser.add_argument("--input", required=True, help="输入精选 JSON 文件")
     parser.add_argument("--output", required=True, help="输出带图片路径的 JSON 文件")
     parser.add_argument("--assets-dir", required=True, help="输出图片目录")

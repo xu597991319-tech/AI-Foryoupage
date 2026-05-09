@@ -1,6 +1,6 @@
-# DeepLearning Architecture
+# AI Headlines Architecture
 
-DeepLearning should start as a Skill-led product, with scripts as the execution layer. MCP can come later when the workflow is stable.
+AI Headlines should start as a Skill-led product, with scripts as the execution layer. MCP can come later when the workflow is stable.
 
 ## Decision
 
@@ -110,7 +110,7 @@ Possible schedulers:
 The scheduled job should run a single local entrypoint once it exists, such as:
 
 ```bash
-python scripts/run_deeplearning_pipeline.py
+python scripts/run_ai_headlines_pipeline.py
 ```
 
 The exact command may change during implementation.
@@ -155,14 +155,14 @@ MCP should be considered after the workflow stabilizes.
 
 Good MCP candidates:
 
-- `dl_validate_config`
-- `dl_fetch`
-- `dl_select`
-- `dl_score`
-- `dl_render`
-- `dl_send`
-- `dl_update_preferences`
-- `dl_get_last_digest`
+- `ai_headlines_validate_config`
+- `ai_headlines_fetch`
+- `ai_headlines_select`
+- `ai_headlines_score`
+- `ai_headlines_render`
+- `ai_headlines_send`
+- `ai_headlines_update_preferences`
+- `ai_headlines_get_last_digest`
 
 MCP is useful when multiple Agents need reliable, reusable tools. It should not replace the Skill. The Skill remains the product behavior layer.
 

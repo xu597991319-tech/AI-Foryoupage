@@ -1,4 +1,4 @@
-# DeepLearning Scoring
+# AI Headlines Scoring
 
 Scoring is not qualification.
 

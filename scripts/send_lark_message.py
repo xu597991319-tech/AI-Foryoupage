@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""将 Todayradar 卡片草稿发送到飞书聊天或话题。"""
+"""将 AI Headlines 卡片草稿发送到飞书聊天或话题。"""
 
 from __future__ import annotations
 
@@ -203,7 +203,7 @@ def upload_images_for_items(draft_file: Path, items: List[Dict[str, Any]], im_se
 
 
 def build_card_dsl(report_date: str, header_title: str, header_template: str, items: List[Dict[str, Any]]) -> Dict[str, Any]:
-    title = header_title or (f"Todayradar 每日精选 | {report_date}" if report_date else "Todayradar 每日精选")
+    title = header_title or (f"AI Headlines 每日精选 | {report_date}" if report_date else "AI Headlines 每日精选")
     elements: List[Dict[str, Any]] = []
 
     for index, item in enumerate(items):
@@ -236,7 +236,7 @@ def build_card_dsl(report_date: str, header_title: str, header_template: str, it
             elements.append({"tag": "hr"})
 
     return {
-        "name": "TodayradarDigestCard",
+        "name": "AIHeadlinesDigestCard",
         "dsl": {
             "schema": "2.0",
             "header": {
@@ -293,7 +293,7 @@ def send_card_message(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="把 Todayradar 卡片草稿发送到飞书聊天或话题")
+    parser = argparse.ArgumentParser(description="把 AI Headlines 卡片草稿发送到飞书聊天或话题")
     parser.add_argument("--draft-file", required=True, help="render_lark_digest.py 生成的交互式卡片草稿 JSON 路径")
     parser.add_argument("--receiver-id", default="", help="接收者标识；默认读取配置或当前用户邮箱")
     parser.add_argument("--id-type", default="", help="接收者类型，默认 email")

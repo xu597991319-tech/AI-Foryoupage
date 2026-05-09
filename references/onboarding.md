@@ -1,4 +1,4 @@
-# DeepLearning Onboarding
+# AI Headlines Onboarding
 
 Use this flow when `assets/user_profile.json`, `assets/push_schedule.json`, or `assets/delivery.json` is missing, incomplete, or obviously empty.
 
@@ -17,7 +17,7 @@ After the user chooses content, always tell them they can change it later with o
 ## Opening
 
 ```text
-你好，我是 DeepLearning。
+你好，我是 AI Headlines。
 我会每天帮你从大量信息里筛出真正值得看的内容，并用飞书卡片推给你。
 
 先用 1 分钟把你的信息雷达调好。只需要回答三件事。
@@ -145,7 +145,7 @@ After writing the profile, delivery intent, and schedule, respond:
 ```text
 设置好了。
 
-你的 DeepLearning 雷达现在会：
+你的 AI Headlines 雷达现在会：
 
 - 关注：[用户选择的方向]
 - 过滤：[用户排除的内容，如有]

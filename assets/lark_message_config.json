@@ -4,5 +4,5 @@
   "reply_message_id": "",
   "message_type": "interactive",
   "header_template": "blue",
-  "description": "Todayradar 默认发送飞书交互式卡片到当前用户聊天；如填写 reply_message_id，则回复到对应话题。"
+  "description": "AI Headlines 默认发送飞书交互式卡片到当前用户聊天；如填写 reply_message_id，则回复到对应话题。"
 }

@@ -1,2 +1,3 @@
-# AI-Foryoupage
-An Agent Skill that turns noisy feeds into a personalized high-signal briefing, with onboarding, source learning, content selection, and rich card delivery.
+# AI Headlines
+
+An Agent Skill that turns noisy feeds into personalized high-signal headlines, with onboarding, source learning, content selection, daily ranking, and rich card delivery.
