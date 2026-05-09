@@ -101,31 +101,21 @@ Do not overwrite a real user profile unless the user asks to update preferences.
 
 Users choose what they want to read; AI Headlines decides where to find it.
 
-Do not expose source engineering terms to the user during onboarding. Internally, each content pack maintains its own source mix:
-
-- `anchor`: stable, trusted, high-signal sources.
-- `expert`: high-quality people, teams, authors, or maintainers.
-- `discovery`: noisy but useful places to discover new signals.
-- `candidate`: sources under observation before becoming trusted.
+Do not expose source engineering terms to the user during onboarding. Internally, each content pack maintains its own source mix and source reputation.
 
 Important rules:
 
-- Do not punish an entire platform or content pack because some items scored low.
-- Reputation updates should apply to the concrete source, such as one RSS feed, one X account, one GitHub repo, or one discovery query.
-- Source learning should not rely only on Top 10 hit rate; consider source role, sample size, candidate rate, final score, reject reasons, and user feedback.
-- Platform-level weights may be light risk hints only; they must not decide elimination.
-- Anchor sources are protected: they may be reduced in frequency, but should not be automatically blocked.
-- Separate content quality from user relevance. A strong source can publish content that is irrelevant to one user without becoming a bad source.
+- Track concrete source quality, not whole-platform quality.
+- Separate content quality from user relevance.
+- Let the source library renew itself through observed content performance.
 - AI Headlines is text-first but not text-only. It may use podcasts, videos, transcripts, show notes, public summaries, and public discussions when they can be converted into reliable text.
-- Do not bypass login or paywalls. If original content is inaccessible, use only public high-quality echoes such as detailed analysis, transcripts, interviews, or discussions, and keep attribution clear.
-- Paid access is not a quality signal. Paid or paywall-adjacent content must pass the same quality bar as free content.
-- The source library should renew itself. New sources enter as `candidate` or `discovery` and earn trust through actual content performance.
+- Use public high-quality echoes when originals are inaccessible, and keep attribution clear.
 
 ## Content Selection
 
 Content selection is a backend candidate-pool rule, not a user-facing presentation rule.
 
-After fetching, decide whether each item deserves to enter the candidate pool before scoring. Selection answers: "Is this worth considering?" Scoring later answers: "Which candidates should be pushed today?"
+After fetching, decide whether each item deserves to enter the candidate pool before scoring.
 
 Candidate content should satisfy at least one of these:
 
@@ -134,18 +124,9 @@ Candidate content should satisfy at least one of these:
 - It changes a workflow, ability boundary, product pattern, toolchain, market signal, or decision context.
 - It comes from a high-signal source and represents an original signal.
 
-Do not select low-quality filler just to fill a card. AI Headlines should normally try to deliver 10 items by expanding from the user's main interests to adjacent interests and then to high-signal general content.
+Do not select low-quality filler just to fill a card. Normally try to deliver 10 items by expanding from the user's main interests to adjacent interests and then to high-signal general content.
 
-Always verify the claim actor before generating the final brief. Do not turn an individual's opinion, employee blog, third-party analysis, or community interpretation into a company's official decision.
-
-Repeat stories should only re-enter the candidate pool when they add a clear new angle, such as new evidence, use case, limitation, implementation detail, ecosystem impact, or expert analysis.
-
-Selection should keep debug reasons:
-
-- `candidate`
-- `selection_reason`
-- `fill_reason`
-- `reject_reason`
+Always verify claim actor attribution. Repeat stories should only re-enter when they add a clear new angle.
 
 For the detailed rules, read `references/content_selection.md`.
 
@@ -153,17 +134,7 @@ For the detailed rules, read `references/content_selection.md`.
 
 Scoring is not qualification. It is final gating and daily ranking.
 
-After content selection, scoring should:
-
-1. Keep veto power for obvious misses with a lightweight final gate.
-2. Rank qualified candidates into the best daily card composition.
-
-Daily ranking should consider:
-
-- `daily_priority`: whether this item should be seen today.
-- `information_gain`: whether it adds something beyond similar candidates.
-- `portfolio_value`: whether it improves the balance of the final 10 items.
-- `attention_return`: whether it deserves one card slot.
+After content selection, scoring should keep veto power for obvious misses and rank qualified candidates into the best daily card composition.
 
 For the detailed rules, read `references/scoring.md`.
 
@@ -188,7 +159,6 @@ Rules:
 - Keep `brief_text` concise but complete: Chinese target 120-220 characters, hard max 260; English target 70-130 words, hard max 160.
 - Keep one lightweight tag and source attribution.
 - Sort by the final scoring/ranking order.
-- Do not add recurring feedback prompts at the bottom; users can talk to the Agent directly.
 - Use rich native cards when the platform supports them. If not, send a compact notification with an HTML digest fallback.
 - Do not expose scoring fields, source roles, selection reasons, or other backend metadata in the final card.
 
@@ -196,7 +166,7 @@ For full rules, read `references/presentation.md`.
 
 ## One-Sentence Preference Updates
 
-Users can modify the radar naturally. Do not force them into fixed feedback flows.
+Users can modify the radar naturally. Do not force them into fixed feedback flows or recurring feedback UI.
 
 Examples:
 
@@ -216,7 +186,7 @@ AI Headlines is currently Skill-led, with local scripts as the execution layer. 
 Execution principles:
 
 - Skill defines product behavior and judgment rules.
-- Scripts handle repeatable work: fetching, deduplication, prefiltering, source reputation, story lifecycle, rendering, delivery, logs.
+- Scripts handle repeatable work: fetching, deduplication, prefiltering, source reputation, story lifecycle, rendering, delivery, and logs.
 - Agent/LLM handles judgment-heavy work: natural-language preference updates, public echo judgment, claim actor attribution, content selection, scoring, and `brief_text`.
 - Code should shrink the candidate pool before Agent/LLM calls to control token cost.
 - First version should be triggered by local tasks, not GitHub Actions by default.
