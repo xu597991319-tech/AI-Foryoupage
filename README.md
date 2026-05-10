@@ -20,12 +20,39 @@ AI Headlines is not a hosted news app. It is a Skill that teaches an Agent how t
 onboarding
 -> source strategy
 -> fetch and prefilter
+-> candidates.json
+-> decisions.json
 -> content selection
 -> scoring and daily ranking
 -> canonical digest
 -> platform rendering
 -> delivery
 ```
+
+## Prototype Pipeline
+
+The current prototype uses a two-stage local runner:
+
+```bash
+# Install dependencies first
+python -m pip install -r requirements.txt
+
+# 1. Fetch and export compact candidates
+python scripts/run_ai_headlines_pipeline.py prepare --dry-run
+
+# 2. Let your Agent read output/candidates.json and write output/decisions.json
+
+# 3. Apply decisions, finalize, render, and optionally send
+python scripts/run_ai_headlines_pipeline.py finish --dry-run --skip-send
+```
+
+You can also run:
+
+```bash
+python scripts/run_ai_headlines_pipeline.py all --dry-run --skip-send
+```
+
+If `output/decisions.json` does not exist, `all` stops after generating `output/candidates.json`.
 
 ## Repository Structure
 
@@ -47,6 +74,16 @@ requirements.txt            # Python dependencies
 - `references/presentation.md`: output model and platform rendering
 - `references/architecture.md`: Skill + local scripts now, optional MCP later
 - `references/execution_pipeline.md`: existing pipeline commands and legacy details
+
+## Agent Decision Artifacts
+
+AI Headlines separates deterministic code from Agent judgment:
+
+- Code exports `output/candidates.json`
+- The Agent writes `output/decisions.json`
+- Code applies decisions into `output/selected_news_draft.json`
+
+This keeps runs resumable, easier to debug, and cheaper in tokens because the Agent only reads compact candidates instead of every raw item.
 
 ## Install as a Cursor Skill
 

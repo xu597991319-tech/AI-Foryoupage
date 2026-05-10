@@ -23,7 +23,33 @@ This file preserves the current AI Headlines execution details. `SKILL.md` shoul
    python3 -m pip install -r requirements.txt
    ```
 
-2. 抓取并标准化新闻。
+2. 使用两段式入口准备候选。
+
+   ```bash
+   python3 scripts/run_ai_headlines_pipeline.py prepare --dry-run
+   ```
+
+   这一步会执行抓取和候选导出，生成：
+
+   - `output/raw_news_today.json`
+   - `output/candidates.json`
+   - `output/run_status.json`
+
+3. Agent/LLM 读取 `output/candidates.json`，写出 `output/decisions.json`。
+
+4. 使用两段式入口完成后续处理。
+
+   ```bash
+   python3 scripts/run_ai_headlines_pipeline.py finish --dry-run --skip-send
+   ```
+
+   这一步会应用决策、封顶、补图、渲染，并在非 dry-run 模式下发送。
+
+下面保留子步骤命令，便于调试。
+
+## 子步骤命令
+
+1. 抓取并标准化新闻。
 
    ```bash
    python3 fetcher.py --output output/raw_news_today.json --limit-per-source 8 --history-file assets/history_seen_urls.json
@@ -37,22 +63,50 @@ This file preserves the current AI Headlines execution details. `SKILL.md` shoul
    - 对 GitHub 条目与 `developer-news` 条目默认写入明显的 `extra.score_adjustment_hint` 与 `extra.suggested_score_ceiling`，提醒后续 AI **按 T2 处理**。
    - `stats.history_filtered_count` 会统计跨频次历史去重丢弃的条目数量。
 
-3. 读取 `references/ai_digest_prompt.md`，基于 `output/raw_news_today.json` 的 `items` 执行 AI 打分、过滤与极简总结，产出候选 JSON。
+2. 导出压缩候选快照，交给 Agent/LLM 判断。
 
-   这一阶段必须满足：
+   ```bash
+   python3 scripts/export_candidates.py --input output/raw_news_today.json --output output/candidates.json --max-items 50
+   ```
 
-   - **标题中文化**：输出标题必须翻成中文，但模型名、产品名、框架名、仓库名等专有名词必须保留原语言。
-   - **先核查，再总结**：必须回看原文 `summary` / `content` / 正文片段，挤掉标题水分、公关话术与二手转述，不可只看标题写 digest。
-   - **精确归因**：必须明确区分“官方正式产品发布 / 公告”“官方团队博客”“员工或研究员个人观点 / 博客 / 采访”“第三方评论或媒体转述”。只有官方正式发布，才能写“某公司发布 / 宣布”；若只是个人表达，必须准确写成“某团队成员提到 / 主张 / 复盘……”，绝不可夸大为公司官方动作。
-   - **严格按 tier 评分**：先判断条目属于 T0 / T1 / T2，再在对应分段内打分；不要给脱离 tier 的游离分。
-   - **T2 默认过滤**：GitHub 热门项目、Developer Tools、底层开发工具默认属于 T2（5-6 分），通常会因低于 7 分被过滤，只有存在明确重大突破时才允许上调。
-   - **每条都要有图片策略**：优先透传 `cover_image_url`；若没有可用图，必须生成 `image_prompt`。
-   - **只保留极简正文**：每条只输出 `tag` 与 `digest`。
-   - **digest 强制超短**：`digest` 必须只有两句，第一句写已核实的事实，第二句写保守洞察，**两句合计绝对不能超过 120 个非空白字符**。
-   - **像电报一样写**：直接说重点，删掉背景、修饰、解释腔与连接词。
-   - **禁止旧版长讲解**：不再输出 `what / pain_point / why_now / evidence`。
+   `output/candidates.json` 只保留 Agent 判断需要的 compact payload，例如标题、来源、链接、摘要片段、正文片段、优先级元数据和图片线索。
 
-4. 对候选结果执行**全局排序 + 数量封顶**，只保留得分最高的前 **10 条** 精选资讯。
+3. Agent/LLM 读取 `output/candidates.json` 和 `references/ai_digest_prompt.md`，写出结构化决策文件。
+
+   ```text
+   output/decisions.json
+   ```
+
+   决策文件建议结构：
+
+   ```json
+   {
+     "report_date": "2026-05-10",
+     "items": [
+       {
+         "candidate_id": "c0001",
+         "tag": "AI设计",
+         "brief_text": "用用户偏好语言写成的一段解释。",
+         "final_score": 82,
+         "topics": ["AI 产品落地"],
+         "daily_priority": 86,
+         "information_gain": 78,
+         "portfolio_value": 82,
+         "attention_return": 75,
+         "ranking_reasons": ["represents_today_key_change"],
+         "ranking_penalties": []
+       }
+     ]
+   }
+   ```
+
+4. 将 Agent 决策应用回现有 draft 格式。
+
+   ```bash
+   python3 scripts/apply_decisions.py --candidates output/candidates.json --decisions output/decisions.json --output output/selected_news_draft.json
+   ```
+
+5. 对候选结果执行**全局排序 + 数量封顶**，只保留得分最高的前 **10 条** 精选资讯。
 
    ```bash
    python3 scripts/finalize_digest.py --input output/selected_news_draft.json --output output/selected_news.json --max-items 10 --history-file assets/history_seen_urls.json
@@ -66,7 +120,22 @@ This file preserves the current AI Headlines execution details. `SKILL.md` shoul
    - 最终保留下来的 Top 10 会写回 `assets/history_seen_urls.json`，确保只有成功保留的精选才进入跨频次历史。
    - 输出结果使用 **扁平 `items` 数组**，保留最终排序，不再重新分组。
 
-5. 为最终保留的条目补齐本地配图。
+## Agent 决策要求
+
+Agent 在写 `output/decisions.json` 时必须满足：
+
+- 只从 `output/candidates.json` 中选择内容，不凭空新增候选。
+- 每个入选项必须带 `candidate_id`。
+- 使用 `brief_text` 作为唯一正文层，不拆标题/副标题/摘要。
+- `brief_text` 使用用户偏好语言；中文目标 120-220 字，上限 260 字，英文目标 70-130 words，上限 160 words。
+- 必须保留一个轻量 `tag`。
+- 必须给出 `final_score`，并可选给出 `daily_priority`、`information_gain`、`portfolio_value`、`attention_return`。
+- 必须核对动作主体归因，不能把个人观点、员工文章、第三方分析或社区解读写成公司官方动作。
+- 重复 story 只有在有新证据、新用例、新限制、实现细节、生态影响或专家分析时才入选。
+- 不输出后台 source role、selection reason、score 解释到最终卡片。
+- 可为无图但高价值的内容生成 `image_prompt`；优先透传候选里的 `cover_image_url`。
+
+6. 为最终保留的条目补齐本地配图。
 
    ```bash
    python3 scripts/resolve_article_images.py --input output/selected_news.json --output output/selected_news_with_assets.json --assets-dir output/images
@@ -74,7 +143,7 @@ This file preserves the current AI Headlines execution details. `SKILL.md` shoul
 
    **注意：** 这个脚本在缺少封面图时会调用 `inner_skills/image-generate` 生成图片，必须通过 `bash` 直接执行，并设置 `include_secrets=true`。
 
-6. 将补图后的结果渲染成飞书交互式卡片草稿。
+7. 将补图后的结果渲染成飞书交互式卡片草稿。
 
    ```bash
    python3 scripts/render_lark_digest.py --input output/selected_news_with_assets.json --output output/ai_headlines_digest.card.json
@@ -88,10 +157,10 @@ This file preserves the current AI Headlines execution details. `SKILL.md` shoul
    - 不写“共性趋势判断”。
    - 不写任何二级分类标题。
    - 只保留：**卡片头部日期标题 → 扁平 Top 10 条目正文 → 紧跟正文的配图**。
-   - 每条正文格式严格为：`{序号}. 【{类别标签}】{两句 digest}`。
-   - `render_lark_digest.py` 会校验 `digest` 长度；超过 120 个非空白字符直接报错，不允许继续发送。
+   - 每条正文格式为：`{序号}. 【{类别标签}】{brief_text}`。
+   - 当前兼容脚本会把 `brief_text` 映射到旧字段 `digest`，后续渲染层应直接使用 `brief_text`。
 
-7. 直接把草稿推送到飞书聊天或指定话题。
+8. 直接把草稿推送到飞书聊天或指定话题。
 
    ```bash
    python3 scripts/send_lark_message.py --draft-file output/ai_headlines_digest.card.json
