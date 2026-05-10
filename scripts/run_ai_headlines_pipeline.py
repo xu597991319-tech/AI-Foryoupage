@@ -52,6 +52,8 @@ def default_paths(output_dir: Path) -> Dict[str, Path]:
         "draft": output_dir / "selected_news_draft.json",
         "selected": output_dir / "selected_news.json",
         "with_assets": output_dir / "selected_news_with_assets.json",
+        "digest": output_dir / "digest.json",
+        "html": output_dir / "digest.html",
         "images_dir": output_dir / "images",
         "card": output_dir / "ai_headlines_digest.card.json",
         "resolved_card": output_dir / "ai_headlines_digest.card.resolved.json",
@@ -179,6 +181,28 @@ def finish(args: argparse.Namespace, paths: Dict[str, Path]) -> Dict[str, Any]:
             str(paths["card"]),
         ],
     )
+    run_step(
+        "build_digest",
+        [
+            sys.executable,
+            "scripts/build_digest.py",
+            "--input",
+            str(paths["with_assets"]),
+            "--output",
+            str(paths["digest"]),
+        ],
+    )
+    run_step(
+        "render_html",
+        [
+            sys.executable,
+            "scripts/render_html_digest.py",
+            "--input",
+            str(paths["digest"]),
+            "--output",
+            str(paths["html"]),
+        ],
+    )
 
     send_result: Dict[str, Any] = {"skipped": True}
     if not args.skip_send and not args.dry_run:
@@ -208,6 +232,8 @@ def finish(args: argparse.Namespace, paths: Dict[str, Path]) -> Dict[str, Any]:
         "draft_file": str(paths["draft"]),
         "selected_file": str(paths["selected"]),
         "with_assets_file": str(paths["with_assets"]),
+        "digest_file": str(paths["digest"]),
+        "html_file": str(paths["html"]),
         "card_file": str(paths["card"]),
         "selected_count": selected_payload.get("meta", {}).get("selected_item_count", len(selected_payload.get("items", []))),
         "send": send_result,

@@ -39,6 +39,7 @@ python -m pip install -r requirements.txt
 
 # Check local environment and configuration
 python scripts/doctor.py
+python scripts/validate_sources.py
 
 # Optional: create a local editable source catalog
 cp assets/sources_catalog.example.json assets/sources_catalog.json
@@ -59,6 +60,12 @@ python scripts/run_ai_headlines_pipeline.py all --dry-run --skip-send
 ```
 
 If `output/decisions.json` does not exist, `all` stops after generating `output/candidates.json`.
+
+The finish stage also produces:
+
+- `output/digest.json`: canonical platform-neutral digest
+- `output/digest.html`: HTML fallback/archive
+- `output/ai_headlines_digest.card.json`: Feishu/Lark card draft
 
 ## Repository Structure
 

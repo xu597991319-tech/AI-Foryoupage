@@ -44,7 +44,7 @@ This file preserves the current AI Headlines execution details. `SKILL.md` shoul
    python3 scripts/run_ai_headlines_pipeline.py finish --dry-run --skip-send
    ```
 
-   这一步会应用决策、封顶、补图、渲染，并在非 dry-run 模式下发送。
+   这一步会应用决策、封顶、补图、生成 `digest.json`、生成 `digest.html`、渲染平台卡片，并在非 dry-run 模式下发送。
 
 下面保留子步骤命令，便于调试。
 
@@ -145,7 +145,19 @@ Agent 在写 `output/decisions.json` 时必须满足：
 
    **注意：** 这个脚本在缺少封面图时会调用 `inner_skills/image-generate` 生成图片，必须通过 `bash` 直接执行，并设置 `include_secrets=true`。
 
-7. 将补图后的结果渲染成飞书交互式卡片草稿。
+7. 生成平台无关 digest。
+
+   ```bash
+   python3 scripts/build_digest.py --input output/selected_news_with_assets.json --output output/digest.json
+   ```
+
+8. 生成 HTML fallback / archive。
+
+   ```bash
+   python3 scripts/render_html_digest.py --input output/digest.json --output output/digest.html
+   ```
+
+9. 将补图后的结果渲染成飞书交互式卡片草稿。
 
    ```bash
    python3 scripts/render_lark_digest.py --input output/selected_news_with_assets.json --output output/ai_headlines_digest.card.json
@@ -162,7 +174,7 @@ Agent 在写 `output/decisions.json` 时必须满足：
    - 每条正文格式为：`{序号}. 【{类别标签}】{brief_text}`。
    - 当前兼容脚本会把 `brief_text` 映射到旧字段 `digest`，后续渲染层应直接使用 `brief_text`。
 
-8. 直接把草稿推送到飞书聊天或指定话题。
+10. 直接把草稿推送到飞书聊天或指定话题。
 
    ```bash
    python3 scripts/send_lark_message.py --draft-file output/ai_headlines_digest.card.json
