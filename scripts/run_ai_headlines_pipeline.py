@@ -14,6 +14,7 @@ from typing import Any, Dict, List
 DEFAULT_OUTPUT_DIR = Path("output")
 DEFAULT_HISTORY_FILE = Path("assets/history_seen_urls.json")
 DEFAULT_TRUST_FILE = Path("assets/sources_trust.json")
+DEFAULT_SOURCES_CATALOG = Path("assets/sources_catalog.json")
 DEFAULT_LARK_CONFIG = Path("assets/lark_message_config.json")
 
 
@@ -73,6 +74,8 @@ def prepare(args: argparse.Namespace, paths: Dict[str, Path]) -> Dict[str, Any]:
             str(args.history_file),
             "--trust-file",
             str(args.trust_file),
+            "--sources-catalog",
+            str(args.sources_catalog),
         ],
     )
     run_step(
@@ -221,6 +224,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--history-file", type=Path, default=DEFAULT_HISTORY_FILE)
     parser.add_argument("--trust-file", type=Path, default=DEFAULT_TRUST_FILE)
+    parser.add_argument("--sources-catalog", type=Path, default=DEFAULT_SOURCES_CATALOG)
     parser.add_argument("--lark-config", type=Path, default=DEFAULT_LARK_CONFIG)
     parser.add_argument("--limit-per-source", type=int, default=8)
     parser.add_argument("--max-candidates", type=int, default=50)

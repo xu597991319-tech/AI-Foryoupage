@@ -21,6 +21,7 @@ This file preserves the current AI Headlines execution details. `SKILL.md` shoul
 
    ```bash
    python3 -m pip install -r requirements.txt
+   cp assets/sources_catalog.example.json assets/sources_catalog.json
    ```
 
 2. 使用两段式入口准备候选。
@@ -52,7 +53,7 @@ This file preserves the current AI Headlines execution details. `SKILL.md` shoul
 1. 抓取并标准化新闻。
 
    ```bash
-   python3 fetcher.py --output output/raw_news_today.json --limit-per-source 8 --history-file assets/history_seen_urls.json
+   python3 fetcher.py --output output/raw_news_today.json --limit-per-source 8 --history-file assets/history_seen_urls.json --sources-catalog assets/sources_catalog.json
    ```
 
    `fetcher.py` 会补充以下信息，供后续 AI 判断：
@@ -62,6 +63,7 @@ This file preserves the current AI Headlines execution details. `SKILL.md` shoul
    - 按新的 tier 体系写入 `extra.priority_tier`、`extra.priority_topics`、`extra.priority_score_floor`。
    - 对 GitHub 条目与 `developer-news` 条目默认写入明显的 `extra.score_adjustment_hint` 与 `extra.suggested_score_ceiling`，提醒后续 AI **按 T2 处理**。
    - `stats.history_filtered_count` 会统计跨频次历史去重丢弃的条目数量。
+   - 如果 `assets/sources_catalog.json` 不存在，fetcher 会回退读取 `assets/sources_catalog.example.json`。
 
 2. 导出压缩候选快照，交给 Agent/LLM 判断。
 

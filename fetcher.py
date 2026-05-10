@@ -20,7 +20,10 @@ import feedparser
 import requests
 from bs4 import BeautifulSoup
 
-RSS_SOURCES = [
+DEFAULT_SOURCE_CATALOG_FILE = "assets/sources_catalog.json"
+DEFAULT_SOURCE_CATALOG_EXAMPLE_FILE = "assets/sources_catalog.example.json"
+
+FALLBACK_RSS_SOURCES = [
     {
         "name": "OpenAI Blog",
         "url": "https://openai.com/news/rss.xml",
@@ -113,7 +116,7 @@ RSS_SOURCES = [
     },
 ]
 
-GITHUB_REPOS = [
+FALLBACK_GITHUB_REPOS = [
     {"owner": "openai", "repo": "openai-python", "branch": "main", "category": "ai-tools"},
     {"owner": "langchain-ai", "repo": "langchain", "branch": "master", "category": "ai-tools"},
     {"owner": "microsoft", "repo": "vscode", "branch": "main", "category": "developer-news"},
@@ -123,6 +126,96 @@ GITHUB_REPOS = [
     {"owner": "QuantConnect", "repo": "Lean", "branch": "master", "category": "quant-research"},
     {"owner": "polakowo", "repo": "vectorbt", "branch": "master", "category": "quant-research"},
 ]
+
+
+def as_list(value) -> List[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    text = str(value).strip()
+    return [text] if text else []
+
+
+def _source_catalog_path(path: str) -> Path:
+    candidate = Path(path)
+    if candidate.exists():
+        return candidate
+    fallback = Path(DEFAULT_SOURCE_CATALOG_EXAMPLE_FILE)
+    if fallback.exists():
+        return fallback
+    return candidate
+
+
+def load_source_catalog(path: str = DEFAULT_SOURCE_CATALOG_FILE) -> Tuple[List[Dict], List[Dict], Dict]:
+    catalog_path = _source_catalog_path(path)
+    if not catalog_path.exists():
+        return FALLBACK_RSS_SOURCES, FALLBACK_GITHUB_REPOS, {
+            "path": str(catalog_path),
+            "used_fallback_constants": True,
+            "version": 0,
+        }
+
+    try:
+        payload = json.loads(catalog_path.read_text(encoding="utf-8-sig"))
+    except Exception as exc:  # noqa: BLE001
+        return FALLBACK_RSS_SOURCES, FALLBACK_GITHUB_REPOS, {
+            "path": str(catalog_path),
+            "used_fallback_constants": True,
+            "error": str(exc),
+            "version": 0,
+        }
+
+    raw_sources = payload.get("sources") if isinstance(payload.get("sources"), list) else []
+    rss_sources: List[Dict] = []
+    github_repos: List[Dict] = []
+
+    for raw in raw_sources:
+        if not isinstance(raw, dict) or raw.get("enabled") is False:
+            continue
+        source_type = str(raw.get("type", "")).strip()
+        base = {
+            "id": str(raw.get("id", "")).strip(),
+            "name": str(raw.get("name", "")).strip(),
+            "category": str(raw.get("category", "")).strip() or "uncategorized",
+            "content_type": str(raw.get("content_type", "")).strip(),
+            "source_role": str(raw.get("source_role", "")).strip(),
+            "feed_mode": str(raw.get("feed_mode", "")).strip(),
+            "packs": as_list(raw.get("packs")),
+        }
+        if source_type == "rss":
+            url = str(raw.get("url", "")).strip()
+            if not url:
+                continue
+            rss_sources.append({**base, "url": url})
+        elif source_type == "github_repo":
+            owner = str(raw.get("owner", "")).strip()
+            repo = str(raw.get("repo", "")).strip()
+            if not owner or not repo:
+                continue
+            github_repos.append(
+                {
+                    **base,
+                    "owner": owner,
+                    "repo": repo,
+                    "branch": str(raw.get("branch", "")).strip() or "main",
+                    "name": base["name"] or f"GitHub/{owner}/{repo}",
+                }
+            )
+
+    if not rss_sources and not github_repos:
+        return FALLBACK_RSS_SOURCES, FALLBACK_GITHUB_REPOS, {
+            "path": str(catalog_path),
+            "used_fallback_constants": True,
+            "version": payload.get("version", 1),
+        }
+
+    return rss_sources, github_repos, {
+        "path": str(catalog_path),
+        "used_fallback_constants": False,
+        "version": payload.get("version", 1),
+        "source_count": len(raw_sources),
+    }
 
 TIER_LABELS = {
     "T0": "T0（最高优先级）",
@@ -1227,11 +1320,17 @@ def sort_datetime(value: str) -> datetime:
         return datetime.min.replace(tzinfo=timezone.utc)
 
 
-def collect_news(limit_per_source: int, history_file: str, trust_file: str) -> Dict:
+def collect_news(
+    limit_per_source: int,
+    history_file: str,
+    trust_file: str,
+    sources_catalog: str = DEFAULT_SOURCE_CATALOG_FILE,
+) -> Dict:
     history_path = Path(history_file)
     history_payload = load_history(history_path)
 
     trust_payload = load_sources_trust(trust_file)
+    rss_sources, github_repos, catalog_meta = load_source_catalog(sources_catalog)
 
     items: List[Dict] = []
     errors: List[Dict] = []
@@ -1239,7 +1338,7 @@ def collect_news(limit_per_source: int, history_file: str, trust_file: str) -> D
     # RSS：并发抓取 + 信源黑名单前置
     allowed_rss_sources: List[Dict] = []
     rss_blocked_count = 0
-    for source in RSS_SOURCES:
+    for source in rss_sources:
         domain = extract_domain_from_url(source.get("url", ""))
         if is_source_blocked(source.get("name", ""), domain, trust_payload):
             rss_blocked_count += 1
@@ -1261,7 +1360,7 @@ def collect_news(limit_per_source: int, history_file: str, trust_file: str) -> D
             "Accept": "application/atom+xml, application/rss+xml, application/xml, text/xml;q=0.9, text/html;q=0.8, */*;q=0.7",
         }
     )
-    for repo in GITHUB_REPOS:
+    for repo in github_repos:
         for kind in ["release", "commit"]:
             try:
                 items.extend(fetch_github_feed(session, repo, kind=kind, limit=max(3, min(limit_per_source, 5))))
@@ -1291,9 +1390,9 @@ def collect_news(limit_per_source: int, history_file: str, trust_file: str) -> D
     return {
         "generated_at": iso_now(),
         "stats": {
-            "rss_source_count": len(RSS_SOURCES),
+            "rss_source_count": len(rss_sources),
             "rss_blocked_count": rss_blocked_count,
-            "github_repo_count": len(GITHUB_REPOS),
+            "github_repo_count": len(github_repos),
             "raw_item_count": len(items),
             "current_run_deduped_item_count": len(current_run_deduped),
             "history_item_count": len(history_payload.get("items", [])),
@@ -1305,8 +1404,9 @@ def collect_news(limit_per_source: int, history_file: str, trust_file: str) -> D
             "error_count": len(errors),
         },
         "sources": {
-            "rss": RSS_SOURCES,
-            "github": GITHUB_REPOS,
+            "catalog": catalog_meta,
+            "rss": rss_sources,
+            "github": github_repos,
         },
         "history": {
             "file": str(history_path),
@@ -1363,6 +1463,11 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_TRUST_FILE,
         help="信源信任度状态文件，默认 assets/sources_trust.json",
     )
+    parser.add_argument(
+        "--sources-catalog",
+        default=DEFAULT_SOURCE_CATALOG_FILE,
+        help=f"信息源目录文件，默认 {DEFAULT_SOURCE_CATALOG_FILE}；不存在时回退到 example",
+    )
     return parser.parse_args()
 
 
@@ -1372,6 +1477,7 @@ def main() -> None:
         limit_per_source=max(1, args.limit_per_source),
         history_file=args.history_file,
         trust_file=args.trust_file,
+        sources_catalog=args.sources_catalog,
     )
 
     output_path = Path(args.output)

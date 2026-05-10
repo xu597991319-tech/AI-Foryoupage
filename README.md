@@ -37,6 +37,9 @@ The current prototype uses a two-stage local runner:
 # Install dependencies first
 python -m pip install -r requirements.txt
 
+# Optional: create a local editable source catalog
+cp assets/sources_catalog.example.json assets/sources_catalog.json
+
 # 1. Fetch and export compact candidates
 python scripts/run_ai_headlines_pipeline.py prepare --dry-run
 
@@ -59,7 +62,7 @@ If `output/decisions.json` does not exist, `all` stops after generating `output/
 ```text
 SKILL.md                    # Main Skill instructions
 references/                 # Detailed product and execution rules
-assets/                     # Content packs and config examples
+assets/                     # Content packs, source catalog, and config examples
 scripts/                    # Existing execution helpers
 fetcher.py                  # Existing fetcher prototype
 requirements.txt            # Python dependencies
