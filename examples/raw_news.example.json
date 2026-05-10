@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-05-10T00:00:00+00:00",
+  "report_date": "2026-05-10",
+  "scan_scope": "AI Headlines example",
+  "stats": {
+    "raw_item_count": 2,
+    "llm_candidate_count": 2
+  },
+  "items": [
+    {
+      "title": "Running Codex safely at OpenAI",
+      "original_title": "Running Codex safely at OpenAI",
+      "source": "OpenAI Blog",
+      "category": "ai-lab",
+      "link": "https://example.com/openai-codex-safety",
+      "summary": "OpenAI describes how Codex is deployed internally with sandboxing, approvals, network controls, and audit logs.",
+      "content": "OpenAI describes internal safety controls for Codex in engineering workflows, including permission boundaries, network policy, human approval, and detailed agent logs.",
+      "published_at": "2026-05-10T08:00:00Z",
+      "source_type": "rss",
+      "extra": {
+        "priority_tier": "T1",
+        "priority_topics": ["AI 行业实践", "AI 工作流应用"],
+        "priority_score_floor": 7,
+        "cover_image_url": "https://example.com/codex-cover.png"
+      }
+    },
+    {
+      "title": "Vasicek Model Implementation in Python",
+      "original_title": "Vasicek Model Implementation in Python",
+      "source": "QuantStart",
+      "category": "quant-research",
+      "link": "https://example.com/vasicek-python",
+      "summary": "A tutorial explaining how to simulate interest-rate paths with the Vasicek model.",
+      "content": "The article walks through a Python implementation of the Vasicek interest-rate model and explains how mean reversion can be used in rate simulation, risk management, and derivatives pricing examples.",
+      "published_at": "2026-05-10T07:00:00Z",
+      "source_type": "rss",
+      "extra": {
+        "priority_tier": "T0",
+        "priority_topics": ["量化交易（Quant）"],
+        "priority_score_floor": 9
+      }
+    }
+  ]
+}

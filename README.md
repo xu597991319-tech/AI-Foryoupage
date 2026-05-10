@@ -73,7 +73,9 @@ The finish stage also produces:
 SKILL.md                    # Main Skill instructions
 references/                 # Detailed product and execution rules
 assets/                     # Content packs, source catalog, and config examples
+examples/                   # Minimal sample artifacts for Agent decisions
 scripts/                    # Existing execution helpers
+tests/                      # Smoke tests
 fetcher.py                  # Existing fetcher prototype
 requirements.txt            # Python dependencies
 ```
@@ -97,6 +99,25 @@ AI Headlines separates deterministic code from Agent judgment:
 - Code applies decisions into `output/selected_news_draft.json`
 
 This keeps runs resumable, easier to debug, and cheaper in tokens because the Agent only reads compact candidates instead of every raw item.
+
+## Examples and Smoke Test
+
+Minimal example artifacts live in `examples/`:
+
+- `examples/raw_news.example.json`
+- `examples/decisions.example.json`
+
+Run the local artifact pipeline without network access:
+
+```bash
+python tests/smoke_pipeline.py
+```
+
+This verifies:
+
+```text
+raw_news -> candidates -> decisions -> selected_news -> digest.json -> digest.html
+```
 
 ## Updating Preferences
 

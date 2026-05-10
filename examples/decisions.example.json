@@ -1,0 +1,31 @@
+{
+  "report_date": "2026-05-10",
+  "items": [
+    {
+      "candidate_id": "c0001",
+      "tag": "Agent",
+      "brief_text": "OpenAI 在内部研发流程中使用 Codex 时，通过沙箱、审批、网络策略和日志限制代码 Agent 的操作边界；企业把编码 Agent 放进真实流程后，安全和治理会成为基础设施问题。",
+      "final_score": 88,
+      "topics": ["AI 行业实践", "AI 工作流应用"],
+      "daily_priority": 90,
+      "information_gain": 86,
+      "portfolio_value": 84,
+      "attention_return": 88,
+      "ranking_reasons": ["official_source", "workflow_governance"],
+      "ranking_penalties": []
+    },
+    {
+      "candidate_id": "c0002",
+      "tag": "量化研究",
+      "brief_text": "这篇内容介绍 Vasicek 模型在利率路径仿真中的 Python 实现，用均值回复过程模拟利率变化；它适合帮助理解利率衍生品定价、风险管理和宏观对冲中的基础建模思路。",
+      "final_score": 82,
+      "topics": ["量化交易（Quant）"],
+      "daily_priority": 78,
+      "information_gain": 84,
+      "portfolio_value": 82,
+      "attention_return": 86,
+      "ranking_reasons": ["method_or_framework"],
+      "ranking_penalties": []
+    }
+  ]
+}
