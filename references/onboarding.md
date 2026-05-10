@@ -212,3 +212,49 @@ Examples:
 - "每天只看 5 条" -> set `max_items` to `5`
 - "以后晚上 6 点发" -> set schedule time to `18:00`
 - "改发到 Slack" -> update delivery intent
+
+## Safe Preference Update Script
+
+Do not hand-edit user preference JSON when a script can apply the update.
+
+When the user gives feedback, the Agent should interpret it into a small patch file:
+
+```json
+{
+  "include_keywords_add": ["Cursor", "MCP"],
+  "exclude_keywords_add": ["crypto"],
+  "selected_packs_add": ["design-experience"],
+  "selected_packs_remove": ["finance-quant"],
+  "max_items": 8,
+  "push_time": "18:00",
+  "delivery_platforms": ["feishu"]
+}
+```
+
+Then run:
+
+```bash
+python scripts/update_preferences.py --patch output/preference_patch.json
+```
+
+Supported patch fields:
+
+- `selected_packs_add`
+- `selected_packs_remove`
+- `include_keywords_add`
+- `include_keywords_remove`
+- `exclude_keywords_add`
+- `exclude_keywords_remove`
+- `language`
+- `max_items`
+- `push_time`
+- `timezone`
+- `schedule_enabled`
+- `delivery_platforms`
+- `fallback_platforms`
+- `enable_sources`
+- `disable_sources`
+- `boost_sources`
+- `downrank_sources`
+
+Use `--dry-run` before applying if the patch is ambiguous.

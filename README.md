@@ -37,6 +37,9 @@ The current prototype uses a two-stage local runner:
 # Install dependencies first
 python -m pip install -r requirements.txt
 
+# Check local environment and configuration
+python scripts/doctor.py
+
 # Optional: create a local editable source catalog
 cp assets/sources_catalog.example.json assets/sources_catalog.json
 
@@ -87,6 +90,17 @@ AI Headlines separates deterministic code from Agent judgment:
 - Code applies decisions into `output/selected_news_draft.json`
 
 This keeps runs resumable, easier to debug, and cheaper in tokens because the Agent only reads compact candidates instead of every raw item.
+
+## Updating Preferences
+
+Agents should translate natural-language feedback into a small patch file, then apply it safely:
+
+```bash
+python scripts/update_preferences.py --patch output/preference_patch.json --dry-run
+python scripts/update_preferences.py --patch output/preference_patch.json
+```
+
+This updates local profile, schedule, delivery intent, or source preferences without hand-editing JSON.
 
 ## Install as a Cursor Skill
 
